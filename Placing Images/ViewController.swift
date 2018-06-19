@@ -56,13 +56,18 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     
     /// Creates a vertical semitransparent plane for detected plane visualisation
     ///
+    /// - Parameter planeAnchor: ARPlaneAnchor to get the size properties from
     /// - Returns: SCNNode with the plane
-    func createWall() -> SCNNode {
+    func createWall(planeAnchor: ARPlaneAnchor) -> SCNNode {
         // Create a new node
         let node = SCNNode()
         
-        // Attach a 1x1 m plane to the node
-        node.geometry = SCNPlane(width: 1, height: 1)
+        // Get estimated width (x) and height (z) of discovered plane
+        let width = CGFloat(planeAnchor.extent.x)
+        let height = CGFloat(planeAnchor.extent.z)
+        
+        // Attach a plane to the node with given width and height
+        node.geometry = SCNPlane(width: width, height: height)
         
         // Rotate the node on X axis by -90º
         node.eulerAngles.x = -.pi / 2
@@ -86,7 +91,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         guard planeAnchor.alignment == .vertical else { return }
         
         // Create a new wall
-        let wall = createWall()
+        let wall = createWall(planeAnchor: planeAnchor)
         
         // Add the wall to the node of discovered plane
         node.addChildNode(wall)
