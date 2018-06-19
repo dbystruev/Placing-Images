@@ -13,6 +13,11 @@
 		69A2708720D8D2930005E8AC /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 69A2708520D8D2930005E8AC /* Main.storyboard */; };
 		69A2708920D8D2950005E8AC /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 69A2708820D8D2950005E8AC /* Assets.xcassets */; };
 		69A2708C20D8D2950005E8AC /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 69A2708A20D8D2950005E8AC /* LaunchScreen.storyboard */; };
+		69A2709520D8F14C0005E8AC /* TrackedArray.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69A2709420D8F14C0005E8AC /* TrackedArray.swift */; };
+		69A2709720D8F9810005E8AC /* printNodeInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69A2709620D8F9810005E8AC /* printNodeInfo.swift */; };
+		69A2709920D8FF900005E8AC /* American Gothic by Grant Wood.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 69A2709820D8FF900005E8AC /* American Gothic by Grant Wood.jpg */; };
+		69A2709C20D900A40005E8AC /* Stu-mick-o-súcks by George Catlin.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 69A2709B20D900A40005E8AC /* Stu-mick-o-súcks by George Catlin.jpg */; };
+		69A2709E20D900AC0005E8AC /* The Gulf Stream by Winslow Homer.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 69A2709D20D900AC0005E8AC /* The Gulf Stream by Winslow Homer.jpg */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -24,6 +29,11 @@
 		69A2708820D8D2950005E8AC /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		69A2708B20D8D2950005E8AC /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		69A2708D20D8D2950005E8AC /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		69A2709420D8F14C0005E8AC /* TrackedArray.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TrackedArray.swift; sourceTree = "<group>"; };
+		69A2709620D8F9810005E8AC /* printNodeInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = printNodeInfo.swift; sourceTree = "<group>"; };
+		69A2709820D8FF900005E8AC /* American Gothic by Grant Wood.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "American Gothic by Grant Wood.jpg"; sourceTree = "<group>"; };
+		69A2709B20D900A40005E8AC /* Stu-mick-o-súcks by George Catlin.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "Stu-mick-o-súcks by George Catlin.jpg"; sourceTree = "<group>"; };
+		69A2709D20D900AC0005E8AC /* The Gulf Stream by Winslow Homer.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "The Gulf Stream by Winslow Homer.jpg"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -56,8 +66,11 @@
 		69A2707E20D8D2930005E8AC /* Placing Images */ = {
 			isa = PBXGroup;
 			children = (
+				69A2709A20D900870005E8AC /* images */,
 				69A2707F20D8D2930005E8AC /* AppDelegate.swift */,
 				69A2708120D8D2930005E8AC /* art.scnassets */,
+				69A2709620D8F9810005E8AC /* printNodeInfo.swift */,
+				69A2709420D8F14C0005E8AC /* TrackedArray.swift */,
 				69A2708320D8D2930005E8AC /* ViewController.swift */,
 				69A2708520D8D2930005E8AC /* Main.storyboard */,
 				69A2708820D8D2950005E8AC /* Assets.xcassets */,
@@ -65,6 +78,16 @@
 				69A2708D20D8D2950005E8AC /* Info.plist */,
 			);
 			path = "Placing Images";
+			sourceTree = "<group>";
+		};
+		69A2709A20D900870005E8AC /* images */ = {
+			isa = PBXGroup;
+			children = (
+				69A2709820D8FF900005E8AC /* American Gothic by Grant Wood.jpg */,
+				69A2709B20D900A40005E8AC /* Stu-mick-o-súcks by George Catlin.jpg */,
+				69A2709D20D900AC0005E8AC /* The Gulf Stream by Winslow Homer.jpg */,
+			);
+			path = images;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -127,7 +150,10 @@
 			files = (
 				69A2708220D8D2930005E8AC /* art.scnassets in Resources */,
 				69A2708C20D8D2950005E8AC /* LaunchScreen.storyboard in Resources */,
+				69A2709E20D900AC0005E8AC /* The Gulf Stream by Winslow Homer.jpg in Resources */,
+				69A2709C20D900A40005E8AC /* Stu-mick-o-súcks by George Catlin.jpg in Resources */,
 				69A2708920D8D2950005E8AC /* Assets.xcassets in Resources */,
+				69A2709920D8FF900005E8AC /* American Gothic by Grant Wood.jpg in Resources */,
 				69A2708720D8D2930005E8AC /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -140,7 +166,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				69A2708420D8D2930005E8AC /* ViewController.swift in Sources */,
+				69A2709720D8F9810005E8AC /* printNodeInfo.swift in Sources */,
 				69A2708020D8D2930005E8AC /* AppDelegate.swift in Sources */,
+				69A2709520D8F14C0005E8AC /* TrackedArray.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
