@@ -14,6 +14,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
 
     @IBOutlet var sceneView: ARSCNView!
     
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -30,6 +31,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         sceneView.scene = scene
     }
     
+    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
@@ -43,13 +45,36 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         sceneView.session.run(configuration)
     }
     
+    
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         
         // Pause the view's session
         sceneView.session.pause()
     }
+    
+    
+    /// Creates a vertical semitransparent plane for detected plane visualisation
+    ///
+    /// - Returns: SCNNode with the plane
+    func createWall() -> SCNNode {
+        // Create a new node
+        let node = SCNNode()
+        
+        // Attach a 1x1 m plane to the node
+        node.geometry = SCNPlane(width: 1, height: 1)
+        
+        // Rotate the node on X axis by -90º
+        node.eulerAngles.x = -.pi / 2
+        
+        // Make the plane semitransparent
+        node.opacity = 0.25
+        
+        // Return the node
+        return node
+    }
 
+    
     // MARK: - ARSCNViewDelegate
     
     // Triggered whenever ARKit reports finding a new anchor
@@ -60,7 +85,11 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         // Check that the plane is vertical
         guard planeAnchor.alignment == .vertical else { return }
         
-        print("A new vertical plane has been discovered")
+        // Create a new wall
+        let wall = createWall()
+        
+        // Add the wall to the node of discovered plane
+        node.addChildNode(wall)
     }
     
 /*
@@ -77,10 +106,12 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         
     }
     
+    
     func sessionWasInterrupted(_ session: ARSession) {
         // Inform the user that the session has been interrupted, for example, by presenting an overlay
         
     }
+    
     
     func sessionInterruptionEnded(_ session: ARSession) {
         // Reset tracking and/or remove existing anchors if consistent tracking is required
