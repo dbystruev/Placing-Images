@@ -24,7 +24,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         sceneView.showsStatistics = true
         
         // Create a new scene
-        let scene = SCNScene(named: "art.scnassets/ship.scn")!
+        let scene = SCNScene()
         
         // Set the scene to the view
         sceneView.scene = scene
@@ -35,6 +35,9 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         
         // Create a session configuration
         let configuration = ARWorldTrackingConfiguration()
+        
+        // Allow detection of vertical planes
+        configuration.planeDetection = .vertical
 
         // Run the view's session
         sceneView.session.run(configuration)
@@ -48,6 +51,17 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     }
 
     // MARK: - ARSCNViewDelegate
+    
+    // Triggered whenever ARKit reports finding a new anchor
+    func renderer(_ renderer: SCNSceneRenderer, didAdd node: SCNNode, for anchor: ARAnchor) {
+        // Check that we discovered a plane
+        guard let planeAnchor = anchor as? ARPlaneAnchor else { return }
+        
+        // Check that the plane is vertical
+        guard planeAnchor.alignment == .vertical else { return }
+        
+        print("A new vertical plane has been discovered")
+    }
     
 /*
     // Override to create and configure nodes for anchors added to the view's session.
