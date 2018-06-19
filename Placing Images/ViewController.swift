@@ -97,6 +97,26 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         node.addChildNode(wall)
     }
     
+    
+    // Triggered when ARKit changes the properties of earlier discovered anchor
+    func renderer(_ renderer: SCNSceneRenderer, didUpdate node: SCNNode, for anchor: ARAnchor) {
+        // Check that the node is being updated is a plane
+        guard let planeAnchor = anchor as? ARPlaneAnchor else { return }
+        
+        // Check that the node has a child node
+        guard let planeNode = node.childNodes.first else { return }
+        
+        // Check that this child node has a geometry of SCNPlane type
+        guard let plane = planeNode.geometry as? SCNPlane else { return }
+        
+        // Adjust the (x, z) position of the plane node
+        planeNode.position = SCNVector3(planeAnchor.center.x, 0, planeAnchor.center.z)
+        
+        // Adjust the plane width and height
+        plane.width = CGFloat(planeAnchor.extent.x)
+        plane.height = CGFloat(planeAnchor.extent.z)
+    }
+    
 /*
     // Override to create and configure nodes for anchors added to the view's session.
     func renderer(_ renderer: SCNSceneRenderer, nodeFor anchor: ARAnchor) -> SCNNode? {
