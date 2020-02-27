@@ -3,24 +3,35 @@
 //  Placing Images
 //
 //  Created by Denis Bystruev on 19/06/2018.
-//  Copyright © 2018 Denis Bystruev. All rights reserved.
+//  Copyright © 2018–2020 Denis Bystruev. All rights reserved.
 //
 
-import UIKit
-import SceneKit
 import ARKit
+import SceneKit
+import UIKit
 
 class ViewController: UIViewController, ARSCNViewDelegate {
     
     // MARK: - ViewController properties
     
+    /// True if any objects were placed already
+    var isPlaced: Bool { 0 < positionZ }
+    
     /// List of pictures and their sizes in real world in meters
     var pictures = TrackedArray<(name: String, width: CGFloat, height: CGFloat)>(
-        ("American Gothic by Grant Wood", width: 0.653, height: 0.78),
-        ("Stu-mick-o-súcks by George Catlin", width: 0.609, height: 0.736),
-        ("The Gulf Stream by Winslow Homer", width: 1.25, height: 0.72)
+        ("deer", width: 0.297, height: 0.210),
+        ("flamingo", width: 0.420, height: 0.297),
+        ("friends", width: 0.297, height: 0.210),
+        ("girl", width: 0.297, height: 0.420),
+        ("moon", width: 0.297, height: 0.210),
+        ("panda", width: 0.297, height: 0.420),
+        ("penguin", width: 0.297, height: 0.420),
+        ("winter", width: 0.297, height: 0.420)
     )
-
+    
+    /// Position of current picture on Z plane (grows by 1 mm after every placement)
+    var positionZ: Float = 0
+    
     /// Connection to the AR scene view in Main.Storyboard
     @IBOutlet var sceneView: ARSCNView!
     
@@ -29,16 +40,25 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         // Find a screen location of user tap
         let touchLocation = sender.location(in: sceneView)
         
+        if
+            let sceneObject = sceneView.hitTest(touchLocation, options: [:]).first,
+            let name = sceneObject.node.name,
+            name != "wall"
+        {
+            sceneObject.node.removeFromParentNode()
+            return
+        }
+        
         // Hit test to see if a ray from camera (user) through the tap instersects any planes
-        let hitTestResult = sceneView.hitTest(touchLocation, types: [.existingPlaneUsingExtent])
+        let worldObjects = sceneView.hitTest(touchLocation, types: [.existingPlane])
         
         // Check if any intersection with a plane was found
-        guard let result = hitTestResult.first else { return }
+        guard let worldObject = worldObjects.first else { return }
         
         // Place a picture at the hit point
-        placePicture(result: result)
+        placePicture(result: worldObject)
         
-        printNodeInfo(starting: sceneView.scene.rootNode)
+        //        printNodeInfo(starting: sceneView.scene.rootNode)
     }
     
     
@@ -52,7 +72,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         sceneView.delegate = self
         
         // Show statistics such as fps and timing information
-        sceneView.showsStatistics = true
+        //        sceneView.showsStatistics = true
         
         // Create a new scene
         let scene = SCNScene()
@@ -71,7 +91,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         // Start detecting planes
         detectPlanes(on: true)
     }
-
+    
     
     /// View is about to be removed
     ///
@@ -101,14 +121,17 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         // Attach a plane to the node with given width and height
         node.geometry = SCNPlane(width: width, height: height)
         
+        // Make the plane red
+        node.geometry?.firstMaterial?.diffuse.contents = UIColor.red
+        
         // Set a name for the node
         node.name = "wall"
         
         // Rotate the node on x axis by -90º
         node.eulerAngles.x -= .pi / 2
         
-        // Make the plane semitransparent
-        node.opacity = 0.25
+        // Make the plane semitransparent if no placements were made
+        node.opacity = isPlaced ? 0.001 : 0.25
         
         // Return the node
         return node
@@ -143,9 +166,12 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         let plane = SCNPlane(width: picture.width, height: picture.height)
         
         // Create UIImage with current picture
-        guard let image = UIImage(named: "\(picture.name).jpg") else {
-            print("\(#function) at \(#line): can't find an image with the name \"\(picture.name).jpg\"")
-            return
+        guard
+            let image = UIImage(named: "\(picture.name).jpg")
+                ?? UIImage(named: "\(picture.name).jpeg")
+            else {
+                print("\(#function) at \(#line): can't find an image with the name \"\(picture.name).jpg\"")
+                return
         }
         
         // Create a material for the plance's surface
@@ -163,8 +189,9 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         // Set a name for the node
         planeNode.name = picture.name
         
-        // Move plane node by 1 mm on z axis to avoid intererence with semitransparent planes
-        planeNode.position.z += 0.001
+        // Move plane node by 1 mm on z axis to avoid intererence with previous planes
+        positionZ += 0.001
+        planeNode.position.z = positionZ
         
         // Create a node which will be a parent for planeNode
         let node = SCNNode()
@@ -198,8 +225,13 @@ class ViewController: UIViewController, ARSCNViewDelegate {
             // Stop detecting planes
             detectPlanes(on: false)
         }
+        
+        // Make the first wall almost invisible
+        if let wallNode = sceneView.scene.rootNode.childNode(withName: "wall", recursively: true) {
+            wallNode.opacity = 0.001
+        }
     }
-
+    
     
     // MARK: - ARSCNViewDelegate
     
@@ -236,31 +268,5 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         // Adjust the plane width and height
         plane.width = CGFloat(planeAnchor.extent.x)
         plane.height = CGFloat(planeAnchor.extent.z)
-    }
-    
-/*
-    // Override to create and configure nodes for anchors added to the view's session.
-    func renderer(_ renderer: SCNSceneRenderer, nodeFor anchor: ARAnchor) -> SCNNode? {
-        let node = SCNNode()
-     
-        return node
-    }
-*/
-    
-    func session(_ session: ARSession, didFailWithError error: Error) {
-        // Present an error message to the user
-        
-    }
-    
-    
-    func sessionWasInterrupted(_ session: ARSession) {
-        // Inform the user that the session has been interrupted, for example, by presenting an overlay
-        
-    }
-    
-    
-    func sessionInterruptionEnded(_ session: ARSession) {
-        // Reset tracking and/or remove existing anchors if consistent tracking is required
-        
     }
 }
